@@ -6,4 +6,4 @@
 
 GitHub Pages 发布源：main 分支的根目录。
 
-目标域名：https://lygzsedu.cn（需完成阿里云 DNS 解析与 HTTPS 证书签发）。
+目标域名：https://shibei.lygzsedu.cn（需完成阿里云 DNS 解析与 HTTPS 证书签发）。
