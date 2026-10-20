@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拾贝 · 教师AI工具箱</title>
+<meta name="description" content="专为教师精选的国产AI工具导航，覆盖备课、课件、微课、测评、科研等教学全场景，点开即用。">
+<style>
+  :root{
+    --primary:#2563eb;
+    --primary-dark:#1e40af;
+    --teal:#0d9488;
+    --bg:#f4f6fb;
+    --card-bg:#ffffff;
+    --text:#1e293b;
+    --text-light:#64748b;
+    --border:#e2e8f0;
+    --hot:#f97316;
+    --free:#16a34a;
+    --freemium:#d97706;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);
+    --shadow-hover:0 6px 24px rgba(37,99,235,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;
+  }
+  a{text-decoration:none;color:inherit}
+
+  /* ===== 顶部 ===== */
+  header{
+    background:linear-gradient(135deg,#1e40af 0%,#2563eb 45%,#0d9488 100%);
+    color:#fff;padding:56px 20px 88px;text-align:center;position:relative;overflow:hidden;
+  }
+  header::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.12),transparent 40%),
+               radial-gradient(circle at 80% 70%,rgba(255,255,255,.10),transparent 40%);
+    pointer-events:none;
+  }
+  .logo{font-size:52px;margin-bottom:8px}
+  header h1{font-size:34px;letter-spacing:2px;font-weight:700;position:relative}
+  header .slogan{margin-top:12px;font-size:16px;opacity:.92;position:relative}
+  header .stats{margin-top:18px;font-size:13px;opacity:.8;position:relative}
+
+  /* ===== 搜索框 ===== */
+  .search-wrap{max-width:640px;margin:-30px auto 0;padding:0 20px;position:relative;z-index:10}
+  .search-box{
+    display:flex;align-items:center;background:#fff;border-radius:999px;
+    box-shadow:0 8px 30px rgba(15,23,42,.14);padding:6px 8px 6px 22px;
+  }
+  .search-box .icon{font-size:18px;margin-right:10px}
+  .search-box input{
+    flex:1;border:none;outline:none;font-size:15px;padding:10px 0;color:var(--text);background:transparent;
+  }
+  .search-box input::placeholder{color:#94a3b8}
+  .search-box .clear-btn{
+    border:none;background:#f1f5f9;color:#64748b;width:34px;height:34px;border-radius:50%;
+    cursor:pointer;font-size:14px;display:none;align-items:center;justify-content:center;
+  }
+  .search-box .clear-btn:hover{background:#e2e8f0}
+  .search-box .clear-btn.show{display:flex}
+
+  /* ===== 分类导航 ===== */
+  nav{
+    position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--border);margin-top:24px;
+  }
+  .nav-inner{
+    max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;gap:8px;
+    overflow-x:auto;scrollbar-width:none;
+  }
+  .nav-inner::-webkit-scrollbar{display:none}
+  .nav-inner a{
+    flex-shrink:0;padding:7px 15px;border-radius:999px;font-size:14px;color:var(--text-light);
+    border:1px solid transparent;transition:all .2s;white-space:nowrap;cursor:pointer;
+  }
+  .nav-inner a:hover{color:var(--primary);background:#eff6ff}
+  .nav-inner a.active{background:var(--primary);color:#fff;font-weight:600}
+  .nav-inner a .cnt{font-size:11px;opacity:.75;margin-left:2px}
+
+  /* ===== 主体 ===== */
+  main{max-width:1200px;margin:0 auto;padding:20px 20px 60px}
+  .category{margin-top:36px;scroll-margin-top:76px}
+  .cat-header{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+  .cat-header h2{font-size:21px;font-weight:700}
+  .cat-header .emoji{font-size:24px}
+  .cat-header .count{font-size:13px;color:var(--text-light)}
+  .cat-header .line{flex:1;height:1px;background:var(--border)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:14px}
+
+  .card{
+    background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;display:flex;flex-direction:column;gap:8px;position:relative;
+    transition:transform .2s,box-shadow .2s,border-color .2s;box-shadow:var(--shadow);
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);border-color:#bfdbfe}
+  .card-top{display:flex;align-items:center;gap:10px}
+  .card-icon{
+    width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:22px;flex-shrink:0;
+  }
+  .card-name{font-size:16px;font-weight:700}
+  .hot-badge{
+    font-size:11px;color:#fff;background:linear-gradient(90deg,#f97316,#ef4444);
+    padding:1px 8px;border-radius:999px;font-weight:600;margin-left:2px;flex-shrink:0;
+  }
+  .card-desc{font-size:13.5px;color:var(--text-light);flex:1;line-height:1.55}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .tag{font-size:11.5px;padding:2px 9px;border-radius:6px;font-weight:500}
+  .tag.free{background:#dcfce7;color:var(--free)}
+  .tag.freemium{background:#fef3c7;color:var(--freemium)}
+  .tag.go{margin-left:auto;color:var(--primary);font-size:13px;font-weight:600;opacity:0;transition:opacity .2s}
+  .card:hover .tag.go{opacity:1}
+
+  /* 搜索无结果 */
+  .no-result{display:none;text-align:center;padding:70px 20px;color:var(--text-light)}
+  .no-result .big{font-size:44px;margin-bottom:10px}
+  .no-result.show{display:block}
+
+  /* ===== 底部 ===== */
+  footer{background:#fff;border-top:1px solid var(--border);margin-top:60px}
+  .footer-inner{max-width:1200px;margin:0 auto;padding:40px 20px 30px}
+  .tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:28px}
+  .tip{
+    background:#f8fafc;border:1px solid var(--border);border-left:4px solid var(--teal);
+    border-radius:10px;padding:14px 16px;font-size:13.5px;color:#475569;
+  }
+  .tip b{color:var(--text);display:block;margin-bottom:4px;font-size:14px}
+  .footer-meta{text-align:center;font-size:12.5px;color:#94a3b8;line-height:2}
+
+  /* 回到顶部 */
+  #backTop{
+    position:fixed;right:24px;bottom:24px;width:44px;height:44px;border-radius:50%;
+    background:var(--primary);color:#fff;border:none;font-size:18px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(37,99,235,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:200;
+  }
+  #backTop.show{opacity:1;pointer-events:auto}
+  #backTop:hover{background:var(--primary-dark)}
+
+  @media (max-width:640px){
+    header{padding:42px 16px 78px}
+    header h1{font-size:26px}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🐚</div>
+  <h1>拾贝 · 教师AI工具箱</h1>
+  <p class="slogan">专为教师精选的国产 AI 工具导航 · 点开即用，助力教学每一环</p>
+  <p class="stats">共收录 <b id="totalCount">64</b> 个工具 · 覆盖备课、课件、微课、测评、科研等 <b>12</b> 个教学场景 · 全部国内直连</p>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <span class="icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="搜索工具名称或用途，如：PPT、批改、微课……">
+    <button class="clear-btn" id="clearBtn" title="清空">✕</button>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner" id="navInner"></div>
+</nav>
+
+<main id="main"></main>
+
+<div class="no-result" id="noResult">
+  <div class="big">🫧</div>
+  <p>没有找到匹配的工具，换个关键词试试？</p>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="tips">
+      <div class="tip"><b>🔒 保护学生数据</b>不向 AI 工具上传学生姓名、照片、成绩等可识别个人信息，遵守《个人信息保护法》和学校数据管理规定。</div>
+      <div class="tip"><b>✅ 核实生成内容</b>AI 生成的教案、题目、史实与数据可能存在错误，使用前务必人工核对，教师对教学内容负最终责任。</div>
+      <div class="tip"><b>🧭 明确使用边界</b>AI 是助手而非替代：学情判断、价值引导、育人关怀仍需教师亲历，合理使用方能提质增效。</div>
+    </div>
+    <div class="footer-meta">
+      拾贝 · 教师AI工具箱 ｜ 收录工具均为国产平台，链接指向各官方网站<br>
+      收录标准为「国内可直连 · 有免费额度 · 中文体验良好」，价格政策以各官网为准
+    </div>
+  </div>
+</footer>
+
+<button id="backTop" title="回到顶部">↑</button>
+
+<script>
+const DATA = [
+  { id:"assistant", emoji:"🧠", name:"全能 AI 助手", tools:[
+    { name:"DeepSeek", icon:"🐋", color:"#dbeafe", url:"https://chat.deepseek.com", hot:true, price:"free", desc:"中文写作与推理表现突出，备课拟题、文本改写、思路梳理的得力助手，完全免费。" },
+    { name:"豆包", icon:"🫘", color:"#fce7f3", url:"https://www.doubao.com", hot:true, price:"free", desc:"字节跳动出品的综合 AI 助手，对话、写作、图像生成一体，上手门槛极低。" },
+    { name:"Kimi", icon:"🌙", color:"#e0e7ff", url:"https://www.kimi.com", hot:true, price:"freemium", desc:"擅长长文档阅读与整理，文献速读、试卷分析、资料汇总都好用，还内置 PPT 助手。" },
+    { name:"通义", icon:"☁️", color:"#ecfeff", url:"https://www.tongyi.com", price:"free", desc:"阿里云大模型应用，支持文档解析、写作与办公辅助，与听悟、万相等生态打通。" },
+    { name:"文心一言", icon:"💙", color:"#dbeafe", url:"https://yiyan.baidu.com", price:"freemium", desc:"百度的对话大模型，中文理解扎实，插件与智能体丰富，与搜索生态打通。" },
+    { name:"讯飞星火", icon:"🔥", color:"#ffedd5", url:"https://xinghuo.xfyun.cn", price:"freemium", desc:"科大讯飞认知大模型，语音交互与教育场景能力强，内置教师助手与课件生成。" },
+    { name:"智谱清言", icon:"💬", color:"#f0fdf4", url:"https://chatglm.cn", price:"free", desc:"智谱 AI 的对话产品，提供长文档解读、数据分析与智能体等功能。" },
+    { name:"腾讯元宝", icon:"🪙", color:"#fef9c3", url:"https://yuanbao.tencent.com", price:"free", desc:"腾讯的 AI 助手，长文阅读与公众号内容检索是特色，微信生态整合好。" }
+  ]},
+  { id:"search", emoji:"🔍", name:"智能搜索", tools:[
+    { name:"秘塔AI搜索", icon:"🗼", color:"#ede9fe", url:"https://metaso.cn", hot:true, price:"free", desc:"无广告的 AI 搜索，自动生成大纲、脑图与参考文献来源，查资料写综述很高效。" },
+    { name:"夸克", icon:"⚡", color:"#e0f2fe", url:"https://www.quark.cn", price:"freemium", desc:"阿里智能搜索 App，AI 搜题、文档扫描与网盘一体，学生答疑和资料管理常用。" },
+    { name:"天工AI", icon:"🛰️", color:"#f0f9ff", url:"https://www.tiangong.cn", price:"free", desc:"昆仑万维的 AI 搜索与对话平台，搜索、写作、文档解析一体化。" }
+  ]},
+  { id:"ppt", emoji:"📊", name:"PPT 与课件", tools:[
+    { name:"讯飞智文", icon:"📝", color:"#fee2e2", url:"https://zhiwen.xfyun.cn", price:"freemium", desc:"科大讯飞的文档与 PPT 生成工具，输入主题或上传文档即可生成课件初稿。" },
+    { name:"AiPPT", icon:"🎯", color:"#ede9fe", url:"https://www.aippt.cn", price:"freemium", desc:"一句话生成整套 PPT，模板风格丰富，适合快速搭建课件框架再手动打磨。" },
+    { name:"WPS AI", icon:"📁", color:"#dbeafe", url:"https://ai.wps.cn", price:"freemium", desc:"嵌在 WPS 里的 AI，文档润色、PPT 一键生成美化，办公教学无缝衔接。" },
+    { name:"百度文库 AI", icon:"📚", color:"#e0f2fe", url:"https://wenku.baidu.com", price:"freemium", desc:"海量教案试卷资源库，新增 AI 生成文档与 PPT 功能，找资料顺便出初稿。" },
+    { name:"博思AIPPT", icon:"🧩", color:"#f0fdf4", url:"https://pptgo.cn", price:"freemium", desc:"支持导入 Word/Markdown 生成 PPT，可自定义模板，教研汇报课件两相宜。" }
+  ]},
+  { id:"image", emoji:"🎨", name:"图像与素材", tools:[
+    { name:"即梦", icon:"🌈", color:"#fce7f3", url:"https://jimeng.jianying.com", hot:true, price:"freemium", desc:"字节跳动的图像生成平台，中文提示词友好，适合生成课件插图与情境图。" },
+    { name:"通义万相", icon:"🖼️", color:"#ecfeff", url:"https://tongyi.aliyun.com/wanxiang", price:"freemium", desc:"阿里的文生图模型，支持多种艺术风格，人物与场景插画质量稳定。" },
+    { name:"文心一格", icon:"🌸", color:"#fef3c7", url:"https://yige.baidu.com", price:"freemium", desc:"百度的 AI 绘画平台，国风与插画风格表现出色，语文课件配图的常客。" },
+    { name:"稿定设计", icon:"✂️", color:"#f0fdf4", url:"https://www.gaoding.com", price:"freemium", desc:"在线设计平台，海报、公众号配图、班级活动展板模板丰富，AI 抠图好用。" },
+    { name:"美图设计室", icon:"💅", color:"#fce7f3", url:"https://www.designkit.com", price:"freemium", desc:"美图出品的 AI 设计工具，AI 海报、智能消除与画质修复一站搞定。" },
+    { name:"LiblibAI", icon:"🎭", color:"#ede9fe", url:"https://www.liblib.art", price:"freemium", desc:"国内领先的 AI 绘画模型社区，海量风格模型可选，适合进阶美术素材创作。" }
+  ]},
+  { id:"video", emoji:"🎬", name:"音视频与微课", tools:[
+    { name:"剪映", icon:"🎞️", color:"#dbeafe", url:"https://www.capcut.cn", hot:true, price:"freemium", desc:"免费视频剪辑工具，内置 AI 字幕、数字人、智能配音，微课制作门槛大幅降低。" },
+    { name:"必剪", icon:"✂️", color:"#fce7f3", url:"https://bcut.bilibili.cn", price:"free", desc:"B 站出品的免费剪辑工具，虚拟形象与录屏功能适合做知识讲解类微课。" },
+    { name:"可灵AI", icon:"🎥", color:"#ffedd5", url:"https://klingai.kuaishou.com", price:"freemium", desc:"快手的视频生成模型，文字或图片生成短视频，可用作课堂导入素材。" },
+    { name:"通义听悟", icon:"👂", color:"#ecfeff", url:"https://tingwu.aliyun.com", hot:true, price:"freemium", desc:"阿里云音视频转写工具，课堂录音、培训视频一键转文字并生成摘要与脑图。" },
+    { name:"讯飞听见", icon:"🎙️", color:"#fee2e2", url:"https://www.iflyrec.com", price:"freemium", desc:"科大讯飞语音转写平台，方言与中英混合识别强，整理听课笔记效率高。" },
+    { name:"腾讯智影", icon:"🤖", color:"#e0e7ff", url:"https://zenvideo.qq.com", price:"freemium", desc:"云端智能视频创作平台，数字人播报功能可快速生成讲解视频。" },
+    { name:"一帧秒创", icon:"⚡", color:"#fef9c3", url:"https://aigc.yizhentv.com", price:"freemium", desc:"图文转视频工具，粘贴讲稿自动配图配音出片，适合批量制作知识短视频。" }
+  ]},
+  { id:"exam", emoji:"✅", name:"测评与组卷", tools:[
+    { name:"问卷星", icon:"📋", color:"#fee2e2", url:"https://www.wjx.cn", price:"freemium", desc:"在线问卷与考试平台，支持 AI 出题、自动批改客观题，课堂小测与学情调查常用。" },
+    { name:"考试宝", icon:"📝", color:"#e0f2fe", url:"https://www.kaoshibao.com", price:"freemium", desc:"可上传自有题库的在线组卷平台，随机抽题、自动判分，组织小测很方便。" },
+    { name:"菁优网", icon:"🏫", color:"#f0fdf4", url:"https://www.jyeoo.com", price:"freemium", desc:"中小学题库与组卷平台，题目带解析和考点标注，理科老师组卷好帮手。" },
+    { name:"学科网", icon:"📖", color:"#dbeafe", url:"https://www.zxxk.com", price:"freemium", desc:"中小学教学资源大站，试卷、课件、教案齐全，配套 AI 备课与智能组卷。" },
+    { name:"批改网", icon:"✍️", color:"#fef3c7", url:"https://www.pigai.org", price:"free", desc:"英语作文自动批改平台，即时反馈拼写语法问题，英语老师的减负利器。" }
+  ]},
+  { id:"class", emoji:"🖐️", name:"课堂互动", tools:[
+    { name:"希沃白板", icon:"🖥️", color:"#dcfce7", url:"https://easinote.seewo.com", hot:true, price:"freemium", desc:"教室大屏互动课件的事实标准，课堂活动模板与学科工具丰富，配 AI 课件初稿。" },
+    { name:"班级优化大师", icon:"🌟", color:"#fef9c3", url:"https://care.seewo.com", price:"free", desc:"游戏化班级管理工具，课堂点评、随机点名、AI 评语生成，班主任的好搭档。" },
+    { name:"雨课堂", icon:"🌧️", color:"#e0f2fe", url:"https://www.yuketang.cn", price:"free", desc:"清华出品的智慧教学工具，PPT 扫码即变互动课堂，弹幕、投稿、随堂测俱全。" },
+    { name:"课堂派", icon:"🧑‍🏫", color:"#ede9fe", url:"https://www.ketangpai.com", price:"freemium", desc:"在线课堂管理平台，作业收发、查重、互动答题一体，高校与中学都适用。" },
+    { name:"学习通", icon:"📱", color:"#fce7f3", url:"https://www.chaoxing.com", price:"free", desc:"超星学习通，移动教学与课程管理平台，签到、测验、资料推送一站完成。" }
+  ]},
+  { id:"edtech", emoji:"🏫", name:"智慧教学平台", tools:[
+    { name:"国家中小学智慧教育平台", icon:"🏛️", color:"#fee2e2", url:"https://basic.smartedu.cn", hot:true, price:"free", desc:"教育部主办的官方平台，全学段全学科课程资源免费看，备课找课例的首选“国家队”。" },
+    { name:"讯飞星光", icon:"⭐", color:"#fef9c3", url:"https://edu.iflytek.com/about-us/news/company-news/2709", price:"freemium", desc:"科大讯飞专为教师打造的超级智能体，备课、组卷、学情、家校沟通全流程覆盖。" },
+    { name:"飞象老师", icon:"🐘", color:"#e0f2fe", url:"https://www.feixianglaoshi.com", hot:true, price:"free", desc:"猿辅导出品的教师 AI 工具，一句话生成交互教学动画与游戏化课件，免费开放注册。" },
+    { name:"希沃AI", icon:"📐", color:"#dcfce7", url:"https://www.seewo.com/product/detail/AI", price:"freemium", desc:"希沃教学大模型，AI 备课、AI 板书美化、课堂反馈报告，与希沃白板生态深度打通。" },
+    { name:"101智慧课堂", icon:"💯", color:"#ede9fe", url:"https://ppt.101.com", price:"freemium", desc:"网龙华渔的智慧教学平台，配套 101 教育 PPT 海量课件资源，覆盖课前课中课后。" },
+    { name:"棒棒堂AI听评课", icon:"🍭", color:"#fce7f3", url:"https://apps.apple.com/cn/app/id6743150642", price:"freemium", desc:"手机录制课堂音视频，AI 多维分析师生互动与课堂节奏，自动生成可视化评课报告。" }
+  ]},
+  { id:"research", emoji:"📚", name:"文献与科研", tools:[
+    { name:"知网研学", icon:"🎓", color:"#fee2e2", url:"https://x.cnki.net", price:"freemium", desc:"知网官方研学平台，文献检索、笔记、写作与 AI 研读一体，教研论文必备。" },
+    { name:"腾讯ima", icon:"🗃️", color:"#e0f2fe", url:"https://ima.qq.com", hot:true, price:"freemium", desc:"腾讯的 AI 知识库工作台，把教案、文献、公众号文章存成知识库再问答写作，答案可溯源。" },
+    { name:"百度学术", icon:"🔎", color:"#dbeafe", url:"https://xueshu.baidu.com", price:"free", desc:"免费学术资源搜索，可查文献来源与引用格式，开题查新的第一站。" },
+    { name:"AMiner", icon:"⛏️", color:"#f0fdf4", url:"https://www.aminer.cn", price:"free", desc:"清华团队研发的科技情报平台，学者画像与论文追踪出色，了解学科前沿。" },
+    { name:"秘塔写作猫", icon:"🐱", color:"#ede9fe", url:"https://www.xiezuocat.com", price:"freemium", desc:"AI 写作辅助工具，校对病句错别字、改写润色，论文与总结写作省时。" }
+  ]},
+  { id:"translate", emoji:"🌐", name:"翻译与语言", tools:[
+    { name:"有道翻译", icon:"📘", color:"#fee2e2", url:"https://fanyi.youdao.com", price:"free", desc:"网易出品，文档翻译保留排版，配套词典与作文批改，英语教学常用。" },
+    { name:"百度翻译", icon:"🌍", color:"#dbeafe", url:"https://fanyi.baidu.com", price:"free", desc:"支持 200 多种语言，文档与截图翻译方便，AI 大模型翻译更自然。" },
+    { name:"腾讯交互翻译", icon:"🔄", color:"#ecfeff", url:"https://transmart.qq.com", price:"free", desc:"交互式机器翻译，支持译文片段记忆与术语干预，适合精细打磨译文。" },
+    { name:"讯飞翻译", icon:"🎤", color:"#f0fdf4", url:"https://fanyi.xfyun.cn", price:"free", desc:"科大讯飞出品，语音同声翻译是强项，外教课堂与国际交流场景实用。" }
+  ]},
+  { id:"mind", emoji:"🗺️", name:"思维与效率", tools:[
+    { name:"XMind", icon:"🧭", color:"#e0f2fe", url:"https://xmind.cn", price:"freemium", desc:"老牌思维导图工具（国产），新版集成 AI 一键生成导图，梳理知识结构利器。" },
+    { name:"幕布", icon:"📄", color:"#f0fdf4", url:"https://mubu.com", price:"freemium", desc:"大纲笔记一键转思维导图，写教案提纲、读书笔记极简高效。" },
+    { name:"ProcessOn", icon:"🔀", color:"#fef3c7", url:"https://www.processon.com", price:"freemium", desc:"在线流程图与思维导图协作平台，支持 AI 生成，教研组协作画图方便。" },
+    { name:"boardmix", icon:"🖇️", color:"#ede9fe", url:"https://boardmix.cn", price:"freemium", desc:"在线协作白板，内置 AI 助手可生成脑图与便签，集体备课头脑风暴好用。" },
+    { name:"亿图脑图", icon:"🌳", color:"#dcfce7", url:"https://www.edrawsoft.cn/mindmaster", price:"freemium", desc:"国产专业思维导图软件，模板社区庞大，AI 对话生成导图一步到位。" },
+    { name:"WorkBuddy", icon:"💼", color:"#dbeafe", url:"https://www.workbuddy.cn", price:"freemium", desc:"腾讯云出品的 AI 办公智能体，一句话自动交付文档、表格、PPT 与数据分析，内置教师助手。" }
+  ]},
+  { id:"agent", emoji:"🛠️", name:"智能体搭建（进阶）", tools:[
+    { name:"扣子", icon:"🧷", color:"#e0f2fe", url:"https://www.coze.cn", price:"free", desc:"字节跳动的 AI 智能体平台，零代码搭建专属答疑 bot，可发布到微信。" },
+    { name:"腾讯元器", icon:"⚙️", color:"#ecfeff", url:"https://yuanqi.tencent.com", price:"free", desc:"腾讯的智能体创作平台，可接入公众号，打造班级专属 AI 助手。" },
+    { name:"文心智能体平台", icon:"🤝", color:"#dbeafe", url:"https://agents.baidu.com", price:"free", desc:"百度智能体搭建平台，零代码创建学科答疑智能体，分发渠道广。" },
+    { name:"Dify", icon:"🏗️", color:"#fef9c3", url:"https://dify.ai", price:"freemium", desc:"开源大模型应用开发平台（国产），支持工作流与知识库，适合技术进阶者。" }
+  ]}
+];
+
+const PRICE_LABEL = { free:["免费","free"], freemium:["免费增值","freemium"] };
+
+const main = document.getElementById("main");
+const navInner = document.getElementById("navInner");
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
+const noResult = document.getElementById("noResult");
+const backTop = document.getElementById("backTop");
+
+// 渲染导航与主体
+DATA.forEach((cat, idx) => {
+  const a = document.createElement("a");
+  a.href = "#cat-" + cat.id;
+  a.dataset.cat = cat.id;
+  a.innerHTML = `${cat.emoji} ${cat.name} <span class="cnt">${cat.tools.length}</span>`;
+  navInner.appendChild(a);
+
+  const sec = document.createElement("section");
+  sec.className = "category";
+  sec.id = "cat-" + cat.id;
+  sec.innerHTML = `
+    <div class="cat-header">
+      <span class="emoji">${cat.emoji}</span>
+      <h2>${cat.name}</h2>
+      <span class="count">${cat.tools.length} 个工具</span>
+      <span class="line"></span>
+    </div>
+    <div class="grid">
+      ${cat.tools.map(t => `
+        <a class="card" href="${t.url}" target="_blank" rel="noopener noreferrer"
+           data-search="${(t.name + " " + t.desc + " " + cat.name).toLowerCase()}">
+          <div class="card-top">
+            <span class="card-icon" style="background:${t.color}">${t.icon}</span>
+            <span class="card-name">${t.name}</span>
+            ${t.hot ? '<span class="hot-badge">🔥 热门</span>' : ''}
+          </div>
+          <p class="card-desc">${t.desc}</p>
+          <div class="card-tags">
+            <span class="tag ${PRICE_LABEL[t.price][1]}">${PRICE_LABEL[t.price][0]}</span>
+            <span class="tag go">访问 →</span>
+          </div>
+        </a>`).join("")}
+    </div>`;
+  main.appendChild(sec);
+});
+
+// 总数
+document.getElementById("totalCount").textContent =
+  DATA.reduce((s, c) => s + c.tools.length, 0);
+
+// 搜索过滤
+function doSearch() {
+  const kw = searchInput.value.trim().toLowerCase();
+  clearBtn.classList.toggle("show", !!kw);
+  let visibleTotal = 0;
+  document.querySelectorAll(".category").forEach(sec => {
+    let visible = 0;
+    sec.querySelectorAll(".card").forEach(card => {
+      const hit = !kw || card.dataset.search.includes(kw);
+      card.style.display = hit ? "" : "none";
+      if (hit) visible++;
+    });
+    sec.style.display = visible ? "" : "none";
+    visibleTotal += visible;
+  });
+  noResult.classList.toggle("show", visibleTotal === 0);
+}
+searchInput.addEventListener("input", doSearch);
+clearBtn.addEventListener("click", () => { searchInput.value = ""; doSearch(); searchInput.focus(); });
+
+// 导航高亮（滚动监听）
+const navLinks = [...navInner.querySelectorAll("a")];
+const sections = DATA.map(c => document.getElementById("cat-" + c.id));
+function onScroll() {
+  const y = window.scrollY + 120;
+  let current = sections[0];
+  sections.forEach(sec => { if (sec.offsetTop <= y) current = sec; });
+  navLinks.forEach(a => a.classList.toggle("active",
+    current && a.dataset.cat === current.id.replace("cat-", "")));
+  backTop.classList.toggle("show", window.scrollY > 500);
+}
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+// 回到顶部
+backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+</script>
+</body>
+</html>
